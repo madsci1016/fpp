@@ -46,6 +46,7 @@ OBJECTS_fppd = \
 	channeloutput/SPInRF24L01.o \
 	channeloutput/SPIws2801.o \
   channeloutput/SPIws281x.o \
+  channeloutput/SPIws281x.o \
 	channeloutput/Triks-C.o \
 	channeloutput/USBDMX.o \
 	channeloutput/USBPixelnet.o \
@@ -225,6 +226,20 @@ SUBDIRS += pru
 SUBMODULES += \
 	external/LEDscape \
 	$(NULL)
+else ifeq '$(ARCH)' 'OrangePi'
+# do something for Orange Pi
+BINDIR = ../bin.pi
+CFLAGS += \
+	-DPLATFORM_ORANGEPI \
+	-DUSEWIRINGPI \
+	$(NULL)
+LIBS_fppd += \
+	-lwiringPi \
+	-lwiringPiDev \
+	$(NULL)
+OBJECTS_fppd += \
+	channeloutput/Hill320.o \
+ 	$(NULL)
 else
 # do something Linux-y
 BINDIR = ../bin

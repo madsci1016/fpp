@@ -143,6 +143,15 @@ then
 elif [ ! -z "${ODROID}" ]
 then
 	FPPPLATFORM="ODROID"
+elif [ ! -z "$(grep sun8i /proc/cpuinfo)" ]
+then
+	FPPPLATFORM="OrangePi"
+elif [ "x${OSID}" = "xdebian" ]
+then
+	FPPPLATFORM="Debian"
+ else
+ 	FPPPLATFORM="UNKNOWN"
+ fi
 else
 	FPPPLATFORM="UNKNOWN"
 fi
@@ -518,6 +527,22 @@ EOF
 		echo "FPP - Installing patched omxplayer.bin for FPP MultiSync"
 		cp /usr/bin/omxplayer.bin /usr/bin/omxplayer.bin.orig
 		wget -O /usr/bin/omxplayer.bin https://github.com/FalconChristmas/fpp-binaries/raw/master/Pi/omxplayer.bin
+		;;
+  'Orange Pi')
+		echo "FPP - Orange Pi"
+
+		echo "FPP - Installing wiringOP (wiringPi port)"
+		cd /opt/ && git clone https://github.com/madsci1016/WiringOP && cd /opt/WiringOP && ./build
+		echo "FPP - Installing OLA from source"
+		apt-get -y --force-yes install libcppunit-dev uuid-dev pkg-config libncurses5-dev libtool autoconf automake libmicrohttpd-dev protobuf-compiler python-protobuf libprotobuf-dev libprotoc-dev bison flex libftdi-dev libftdi1 libusb-1.0-0-dev liblo-dev
+		apt-get -y clean
+		git clone https://github.com/OpenLightingProject/ola.git /opt/ola
+		(cd /opt/ola && autoreconf -i && ./configure --enable-rdm-tests --enable-python-libs && make && make install && ldconfig)
+		rm -rf /opt/ola
+
+		echo "FPP - Disabling stock users, use the 'fpp' user instead"
+		sed -i -e "s/^orangepi:.*/orangepi:*:16372:0:99999:7:::/" /etc/shadow
+
 		;;
 esac
 

@@ -32,7 +32,7 @@
 #include <string.h>
 #include <strings.h>
 #include <unistd.h>
-
+#include <linux/version.h>
 #include "channeloutputthread.h"
 #include "command.h"
 #include "common.h"
@@ -73,12 +73,14 @@ int InitControlSocket(void) {
 	crSrcAddr.sin_port = htons(FPP_CTRL_PORT);
 
 	int optval = 1;
-#ifdef SO_REUSEPORT
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(3,9,0)
+#  ifndef PLATFORM_ORANGEPI
 	if (setsockopt(ctrlRecvSock, SOL_SOCKET, SO_REUSEPORT, &optval, sizeof(optval)) < 0)
 	{
 		perror("control setsockopt SO_REUSEPORT");
 		exit(1);
 	}
+  #  endif
 #endif
 
 	// Bind the socket to address/port

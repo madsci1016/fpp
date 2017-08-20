@@ -1369,7 +1369,7 @@ function SetChannelOutputs() {
 				DialogError("Save Channel Outputs", "Invalid SPI-WS281x Config");
 				return;
 			}
-			maxChannels = 1023;
+			maxChannels = 3000;
 		}else if (type == "SPI-nRF24L01") {
 			config += GetnRFSpeedConfig($this.find("td:nth-child(6)"));
 			if (config == "") {
@@ -1637,6 +1637,13 @@ function AddOtherOutput() {
 				"<option value='RPIWS281X'>RPIWS281X</option>" +
 <?
 	}
+	if ($settings['Platform'] == "OrangePi")
+	{
+?>
+				"<option value='SPI-WS2801'>SPI-WS2801</option>" +
+				"<option value='SPI-nRF24L01'>SPI-nRF24L01</option>" +
+<?
+  }
 ?>
 				"<option value='VirtualMatrix'>Virtual Matrix</option>" +
 				"<option value='Triks-C'>Triks-C</option>" +
@@ -2674,6 +2681,22 @@ tr.rowUniverseDetails td
 									</select>
 									</td>
 							</tr>
+<?
+	if ($settings['Platform'] == "Raspberry Pi")
+	{
+?>
+							<tr>
+								<td><b>Wiring Pinout:</b></td><td>
+									<select id='LEDPanelsWiringPinout'>
+										<option value='Standard'>Standard</option>
+										<option value='Classic'>Classic</option>
+										<option value='Adafruit'>Adafruit</option>
+									</select>
+									</td>
+							</tr>
+<?
+	}
+?>
 							<tr>
 								<td><b>Brightness:</b></td><td>
 									<select id='LEDPanelsBrightness'>

@@ -65,8 +65,11 @@
 #  include "RGBMatrix.h"
 #endif
 
-#ifdef PLATFORM_PI
+#ifdef USEWIRINGPI
 #  include "Hill320.h"
+#endif
+
+#ifdef PLATFORM_PI
 #  include "rpi_ws281x.h"
 #endif
 
@@ -274,7 +277,7 @@ int InitializeChannelOutputs(void) {
 				channelOutputs[i].output = (ChannelOutputBase*)new FBVirtualDisplayOutput(0, FPPD_MAX_CHANNELS);
 			} else if (type == "USBRelay") {
 				channelOutputs[i].output = new USBRelayOutput(start, count);
-#if defined(PLATFORM_PI)
+#ifdef USEWIRINGPI
 			} else if (type == "Hill320") {
 				channelOutputs[i].output = new Hill320Output(start, count);
 #endif
